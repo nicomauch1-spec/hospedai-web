@@ -2,7 +2,10 @@
 <html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Viewport correcto y robusto -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
     <title>HospedAI | Automatización Inteligente para Hoteles</title>
     <meta name="description" content="Atiende a tus huéspedes en WhatsApp, Instagram y Web. Aumenta reservas directas con IA.">
     
@@ -29,27 +32,45 @@
     </script>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* 🔒 evita scroll lateral en móvil */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
         .pulse-orange {
             animation: pulse 2s infinite;
         }
+
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(242, 122, 84, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(242, 122, 84, 0); }
             100% { box-shadow: 0 0 0 0 rgba(242, 122, 84, 0); }
         }
+
+        /* Safe area para iOS (notch) */
+        header, nav {
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
     </style>
 </head>
+
 <body class="bg-hospedai-light text-slate-800">
 
-    <div class="bg-gradient-to-r from-hospedai-accent to-orange-500 text-white text-center py-2 px-4 text-sm font-bold fixed w-full z-[60] top-0 shadow-md flex justify-center items-center gap-3">
+    <div id="top-banner" class="bg-gradient-to-r from-hospedai-accent to-orange-500 text-white text-center py-2 px-4 text-sm font-bold fixed w-full z-[60] top-0 shadow-md flex justify-center items-center gap-3">
         <span class="animate-pulse">⚡</span>
         <span>OFERTA LANZAMIENTO: Setup GRATIS (solo hasta el 28/02)</span>
         <span class="hidden sm:inline bg-white/30 px-2 py-0.5 rounded text-[10px] tracking-widest uppercase">Cupos Limitados</span>
     </div>
 
-    <nav class="bg-white/90 backdrop-blur-md py-4 shadow-sm fixed w-full z-50 top-9 transition-all duration-300">
+    <nav id="main-nav" class="bg-white/90 backdrop-blur-md py-4 shadow-sm fixed w-full z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
             <a href="#" class="flex items-center">
                 <img src="logo-hospedai.png" alt="HospedAI Logo" class="h-10 md:h-12 w-auto transition-transform hover:scale-105">
@@ -304,5 +325,20 @@
             }
         });
     </script>
+    <script>
+    function adjustNavPosition() {
+        const banner = document.getElementById('top-banner');
+        const nav = document.getElementById('main-nav');
+
+        if (banner && nav) {
+        const bannerHeight = banner.offsetHeight;
+        nav.style.top = bannerHeight + 'px';
+        }
+    }
+
+    window.addEventListener('load', adjustNavPosition);
+    window.addEventListener('resize', adjustNavPosition);
+    </script>
+
 </body>
 </html>
