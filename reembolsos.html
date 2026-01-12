@@ -42,11 +42,16 @@
                     },
                     animation: {
                         'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'dropdown': 'dropdown 0.2s ease-out forwards',
                     },
                     keyframes: {
                         slideUp: {
                             '0%': { transform: 'translateY(20px)', opacity: '0' },
                             '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        dropdown: {
+                            '0%': { transform: 'scaleY(0)', transformOrigin: 'top', opacity: '1' },
+                            '100%': { transform: 'scaleY(1)', transformOrigin: 'top', opacity: '1' },
                         }
                     }
                 }
@@ -88,10 +93,16 @@
             <div class="flex flex-nowrap items-center justify-center gap-2">
                 <span
                     class="animate-pulse bg-white text-red-500 px-1.5 py-0.5 rounded text-[10px] md:text-xs uppercase tracking-wider flex-shrink-0 shadow-sm">Oferta</span>
-                <span class="text-[10px] sm:text-[11px] md:hidden block whitespace-nowrap">🎁 Instalación 100%
-                    BONIFICADA (Cupos Limitados) ⏳</span>
-                <span class="hidden md:block text-sm whitespace-nowrap">Instalación 100% Bonificada (Solo para los
-                    próximos 5 hoteles) ⏳ | ⚡ Operativo en 72hs</span>
+
+                <!-- Mobile Text (Shortened) -->
+                <span class="text-[10px] sm:text-[11px] md:hidden block whitespace-nowrap">
+                    🎁 Instalación 100% BONIFICADA (Cupos Limitados) ⏳
+                </span>
+
+                <!-- Desktop Text (Full) -->
+                <span class="hidden md:block text-sm whitespace-nowrap">
+                    🎁 Instalación 100% BONIFICADA (Cupos Limitados) ⏳ | ⚡ Operativo en 72hs
+                </span>
             </div>
         </div>
 
@@ -122,7 +133,7 @@
 
             <!-- Mobile Menu Dropdown -->
             <div id="mobile-menu"
-                class="hidden md:hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-slate-100 flex-col animate-slide-up origin-top">
+                class="hidden md:hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-slate-100 flex-col animate-dropdown origin-top">
                 <div class="p-6">
                     <a href="index.html"
                         class="block w-full text-center border-2 border-hospedai-dark text-hospedai-dark px-6 py-3 rounded-xl font-bold hover:bg-hospedai-dark hover:text-white transition uppercase text-xs tracking-widest">
@@ -231,9 +242,8 @@
                 <h4 class="text-white font-bold mb-6">Legal</h4>
                 <ul class="space-y-3 text-sm">
                     <li><a href="privacidad.html" class="hover:text-hospedai-accent transition">Privacidad</a></li>
-                    <li><a href="terminos.html" class="hover:text-hospedai-accent transition">Términos de Servicio</a>
-                    </li>
-                    <li><a href="#" class="text-hospedai-accent font-bold">Reembolsos</a></li>
+                    <li><a href="terminos.html" class="hover:text-hospedai-accent transition">Términos</a></li>
+                    <li><a href="reembolsos.html" class="hover:text-hospedai-accent transition">Reembolsos</a></li>
                 </ul>
             </div>
 
