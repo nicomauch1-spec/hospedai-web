@@ -1,12 +1,20 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
     <title>Términos de Servicio | HospedAI</title>
-    
     <link rel="icon" href="favicon.png" type="image/png">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -14,113 +22,275 @@
                 extend: {
                     colors: {
                         hospedai: {
-                            dark: '#0F4C5C', 
+                            dark: '#0F4C5C',
                             accent: '#F27A54',
                             light: '#F8FAFC',
+                            surface: '#FFFFFF'
                         }
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft-xl': '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
+                        'deep-2xl': '0 25px 50px -12px rgba(15, 76, 92, 0.15)',
+                        'glow': '0 0 20px rgba(242, 122, 84, 0.3)'
+                    },
+                    borderRadius: {
+                        '3xl': '1.5rem',
+                        '4xl': '2rem'
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
                     }
                 }
             }
         }
     </script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F8FAFC;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 5px;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
     </style>
 </head>
-<body class="bg-hospedai-light text-slate-800 leading-relaxed">
 
-    <nav class="bg-white py-4 shadow-sm border-b border-slate-100">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <a href="index.html" class="flex items-center">
-                <img src="logo-hospedai.png" alt="HospedAI Logo" class="h-10 w-auto transition-transform hover:scale-105">
-            </a>
-            <a href="index.html" class="text-hospedai-dark hover:text-hospedai-accent transition font-bold text-sm uppercase tracking-wider">
-                ← Volver al sitio
-            </a>
+<body class="bg-hospedai-light text-slate-800 antialiased overflow-x-hidden pt-[30px]">
+
+    <!-- HEADER WRAPPER (Fixed) -->
+    <div class="fixed top-0 left-0 w-full z-50 bg-white flex flex-col">
+        <!-- URGENCY BANNER -->
+        <div
+            class="bg-gradient-to-r from-red-500 to-hospedai-accent text-white font-bold py-2.5 md:py-3 text-center flex items-center justify-center px-4 relative z-20">
+            <div class="flex flex-nowrap items-center justify-center gap-2">
+                <span
+                    class="animate-pulse bg-white text-red-500 px-1.5 py-0.5 rounded text-[10px] md:text-xs uppercase tracking-wider flex-shrink-0 shadow-sm">Oferta</span>
+                <span class="text-[10px] sm:text-[11px] md:hidden block whitespace-nowrap">🎁 Instalación 100%
+                    BONIFICADA (Cupos Limitados) ⏳</span>
+                <span class="hidden md:block text-sm whitespace-nowrap">Instalación 100% Bonificada (Solo para los
+                    próximos 5 hoteles) ⏳ | ⚡ Operativo en 72hs</span>
+            </div>
         </div>
-    </nav>
 
-    <main class="max-w-4xl mx-auto px-6 py-16">
-        <div class="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-slate-200">
-            
-            <header class="border-b border-slate-100 pb-8 mb-8">
-                <h1 class="text-3xl md:text-4xl font-extrabold text-hospedai-dark mb-4">Términos de Servicio</h1>
-                <p class="text-sm text-slate-500 italic">Última actualización: 23 de diciembre de 2025</p>
+        <!-- NAVBAR -->
+        <nav
+            class="w-full transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-100/50 relative z-10">
+            <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex justify-between items-center relative">
+                <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+                    <img src="logo-hospedai.png" alt="HospedAI"
+                        class="h-8 md:h-10 w-auto transition-transform group-hover:scale-105">
+                </a>
+
+                <div class="hidden md:flex items-center space-x-8 font-medium text-sm text-slate-600">
+                    <a href="index.html"
+                        class="border-2 border-hospedai-dark text-hospedai-dark px-6 py-2.5 rounded-full hover:bg-hospedai-dark hover:text-white transition font-bold text-xs uppercase tracking-widest">
+                        ← Volver al sitio
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-hospedai-dark p-2 focus:outline-none">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Dropdown -->
+            <div id="mobile-menu"
+                class="hidden md:hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-slate-100 flex-col animate-slide-up origin-top">
+                <div class="p-6">
+                    <a href="index.html"
+                        class="block w-full text-center border-2 border-hospedai-dark text-hospedai-dark px-6 py-3 rounded-xl font-bold hover:bg-hospedai-dark hover:text-white transition uppercase text-xs tracking-widest">
+                        ← Volver al sitio
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-4xl mx-auto px-6 py-40">
+        <div class="bg-white p-8 md:p-14 rounded-[2.5rem] shadow-deep-2xl border border-slate-100 animate-slide-up">
+
+            <header class="border-b border-slate-100 pb-8 mb-10">
+                <h1 class="text-3xl md:text-4xl font-black text-hospedai-dark mb-4 tracking-tight">Términos de Servicio
+                </h1>
+                <p
+                    class="text-sm text-slate-500 font-medium bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">
+                    📅 Última actualización: 23 de diciembre de 2025</p>
             </header>
 
-            <section class="space-y-8 text-slate-700">
-                <p>
-                    Bienvenido a <strong>HospedAI</strong>. Al contratar y utilizar nuestros servicios de automatización e inteligencia artificial, usted acepta cumplir con los siguientes términos y condiciones.
+            <section class="space-y-10 text-slate-600 leading-loose">
+                <p class="text-lg">
+                    Bienvenido a <strong class="text-hospedai-dark">HospedAI</strong>. Al contratar y utilizar nuestros
+                    servicios de automatización e inteligencia artificial, usted acepta cumplir con los siguientes
+                    términos y condiciones.
                 </p>
-                
+
                 <div>
-                    <h2 class="text-2xl font-bold text-hospedai-dark mb-4 flex items-center">
-                        <span class="bg-hospedai-accent/10 text-hospedai-accent w-8 h-8 rounded-lg flex items-center justify-center mr-3 text-base font-bold">1</span>
+                    <h2 class="text-2xl font-extrabold text-hospedai-dark mb-5 flex items-center">
+                        <span
+                            class="bg-hospedai-accent/10 text-hospedai-accent w-10 h-10 rounded-xl flex items-center justify-center mr-4 text-sm font-black shadow-sm">1</span>
                         Descripción del Servicio
                     </h2>
                     <p>
-                        HospedAI ofrece soluciones de software basadas en Inteligencia Artificial (IA) para la industria hotelera, incluyendo chatbots conversacionales, gestión de reservas y automatización de procesos operativos (Essential, Pro y Elite).
+                        HospedAI ofrece soluciones de software basadas en Inteligencia Artificial (IA) para la industria
+                        hotelera, incluyendo chatbots conversacionales, gestión de reservas y automatización de procesos
+                        operativos (Essential, Pro y Elite).
                     </p>
                 </div>
 
                 <div>
-                    <h2 class="text-2xl font-bold text-hospedai-dark mb-4 flex items-center">
-                        <span class="bg-hospedai-accent/10 text-hospedai-accent w-8 h-8 rounded-lg flex items-center justify-center mr-3 text-base font-bold">2</span>
+                    <h2 class="text-2xl font-extrabold text-hospedai-dark mb-5 flex items-center">
+                        <span
+                            class="bg-hospedai-accent/10 text-hospedai-accent w-10 h-10 rounded-xl flex items-center justify-center mr-4 text-sm font-black shadow-sm">2</span>
                         Suscripciones y Pagos
                     </h2>
                     <p>
-                        Los pagos de suscripción mensual y las tarifas únicas de configuración (Setup) son procesados exclusivamente a través de <strong>Lemon Squeezy</strong>. El acceso al servicio está condicionado al pago puntual de la suscripción correspondiente.
+                        Los pagos de suscripción mensual y las tarifas únicas de configuración (Setup) son procesados
+                        exclusivamente a través de <strong class="text-slate-800">Lemon Squeezy</strong>. El acceso al
+                        servicio está condicionado al pago puntual de la suscripción correspondiente.
                     </p>
                 </div>
 
                 <div>
-                    <h2 class="text-2xl font-bold text-hospedai-dark mb-4 flex items-center">
-                        <span class="bg-hospedai-accent/10 text-hospedai-accent w-8 h-8 rounded-lg flex items-center justify-center mr-3 text-base font-bold">3</span>
+                    <h2 class="text-2xl font-extrabold text-hospedai-dark mb-5 flex items-center">
+                        <span
+                            class="bg-hospedai-accent/10 text-hospedai-accent w-10 h-10 rounded-xl flex items-center justify-center mr-4 text-sm font-black shadow-sm">3</span>
                         Responsabilidad del Usuario
                     </h2>
                     <p>
-                        El cliente es responsable de proporcionar información veraz para el entrenamiento de la IA. HospedAI no se hace responsable de respuestas incorrectas derivadas de datos erróneos suministrados por el establecimiento hotelero.
+                        El cliente es responsable de proporcionar información veraz para el entrenamiento de la IA.
+                        HospedAI no se hace responsable de respuestas incorrectas derivadas de datos erróneos
+                        suministrados por el establecimiento hotelero.
                     </p>
                 </div>
 
                 <div>
-                    <h2 class="text-2xl font-bold text-hospedai-dark mb-4 flex items-center">
-                        <span class="bg-hospedai-accent/10 text-hospedai-accent w-8 h-8 rounded-lg flex items-center justify-center mr-3 text-base font-bold">4</span>
+                    <h2 class="text-2xl font-extrabold text-hospedai-dark mb-5 flex items-center">
+                        <span
+                            class="bg-hospedai-accent/10 text-hospedai-accent w-10 h-10 rounded-xl flex items-center justify-center mr-4 text-sm font-black shadow-sm">4</span>
                         Propiedad Intelectual
                     </h2>
                     <p>
-                        Todo el software, algoritmos y flujos de automatización desarrollados por HospedAI son propiedad intelectual exclusiva de la marca. El cliente recibe una licencia de uso no exclusiva durante el tiempo que dure su suscripción activa.
+                        Todo el software, algoritmos y flujos de automatización desarrollados por HospedAI son propiedad
+                        intelectual exclusiva de la marca. El cliente recibe una licencia de uso no exclusiva durante el
+                        tiempo que dure su suscripción activa.
                     </p>
                 </div>
 
                 <div>
-                    <h2 class="text-2xl font-bold text-hospedai-dark mb-4 flex items-center">
-                        <span class="bg-hospedai-accent/10 text-hospedai-accent w-8 h-8 rounded-lg flex items-center justify-center mr-3 text-base font-bold">5</span>
+                    <h2 class="text-2xl font-extrabold text-hospedai-dark mb-5 flex items-center">
+                        <span
+                            class="bg-hospedai-accent/10 text-hospedai-accent w-10 h-10 rounded-xl flex items-center justify-center mr-4 text-sm font-black shadow-sm">5</span>
                         Modificaciones
                     </h2>
                     <p>
-                        HospedAI se reserva el derecho de modificar estos términos en cualquier momento para reflejar cambios en la tecnología, leyes aplicables o procesos comerciales.
+                        HospedAI se reserva el derecho de modificar estos términos en cualquier momento para reflejar
+                        cambios en la tecnología, leyes aplicables o procesos comerciales.
                     </p>
                 </div>
 
-                <div class="bg-hospedai-light p-6 rounded-2xl border border-hospedai-dark/5 text-center">
-                    <p class="text-sm">
-                        Para consultas legales, por favor contáctenos en 
-                        <a href="mailto:hola@hospedaiapp.com" class="text-hospedai-accent font-bold hover:underline">hola@hospedaiapp.com</a>.
+                <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 text-center">
+                    <p class="text-sm font-medium">
+                        Para consultas legales, contactar a:
+                        <a href="mailto:hola@hospedaiapp.com"
+                            class="text-hospedai-accent font-bold hover:underline ml-1">hola@hospedaiapp.com</a>
                     </p>
                 </div>
             </section>
         </div>
     </main>
 
-    <footer class="py-12 text-center text-slate-400 text-sm">
-        <p>© 2025 HospedAI. Todos los derechos reservados.</p>
+    <!-- FOOTER -->
+    <footer class="bg-hospedai-dark text-slate-300 py-16 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12">
+            <div class="col-span-1 md:col-span-1">
+                <img src="logo-hospedai.png" alt="HospedAI Logo" class="h-8 w-auto brightness-0 invert opacity-70 mb-6">
+                <p class="text-sm leading-relaxed text-slate-400">
+                    Ayudamos a hoteles y anfitriones a automatizar sus operaciones y aumentar ingresos con Inteligencia
+                    Artificial.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-6">Producto</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="index.html#beneficios" class="hover:text-hospedai-accent transition">Beneficios</a>
+                    </li>
+                    <li><a href="index.html#precios" class="hover:text-hospedai-accent transition">Precios</a></li>
+                    <li><a href="index.html#testimonios" class="hover:text-hospedai-accent transition">Casos de
+                            Éxito</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-6">Legal</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="privacidad.html" class="hover:text-hospedai-accent transition">Privacidad</a></li>
+                    <li><a href="#" class="text-hospedai-accent font-bold">Términos de Servicio</a></li>
+                    <li><a href="reembolsos.html" class="hover:text-hospedai-accent transition">Reembolsos</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-6">Contacto</h4>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-hospedai-accent" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.888 11.888-11.888 3.176 0 6.161 1.237 8.404 3.48s3.481 5.229 3.481 8.406c0 6.555-5.332 11.887-11.888 11.887-2.01 0-3.991-.51-5.757-1.478l-6.228 1.702zm6.312-3.677l.452.268c1.462.868 3.102 1.326 4.788 1.326 4.981 0 9.038-4.056 9.038-9.038 0-2.413-.94-4.681-2.647-6.388s-3.975-2.646-6.389-2.646c-4.981 0-9.038 4.057-9.038 9.038 0 1.751.51 3.456 1.474 4.938l.295.452-1.112 4.055 4.149-1.135z" />
+                        </svg>
+                        <a href="https://wa.me/5491173587209" class="hover:text-white transition">WhatsApp</a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-hospedai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        <a href="mailto:hola@hospedaiapp.com"
+                            class="hover:text-white transition">hola@hospedaiapp.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
+            <p>&copy; 2026 HospedAI. Todos los derechos reservados.</p>
+        </div>
     </footer>
 
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+    </script>
 </body>
+
 </html>

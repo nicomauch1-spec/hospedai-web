@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
-
-    <!-- Viewport correcto y robusto -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <title>HospedAI | Automatización Inteligente para Hoteles</title>
-    <meta name="description" content="Atiende a tus huéspedes en WhatsApp, Instagram y Web. Aumenta reservas directas con IA.">
-    
+    <title>HospedAI | Automatiza y Multiplica tus Reservas Directas</title>
+    <meta name="description"
+        content="Aumenta tus reservas directas y ahorra tiempo con la IA de HospedAI. Atención 24/7 en WhatsApp, Instagram y tu Sitio Web.">
+
     <link rel="icon" href="favicon.png" type="image/png">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,327 +25,753 @@
                 extend: {
                     colors: {
                         hospedai: {
-                            dark: '#0F4C5C', 
+                            dark: '#0F4C5C',
                             accent: '#F27A54',
                             light: '#F8FAFC',
+                            surface: '#FFFFFF'
                         }
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft-xl': '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
+                        'deep-2xl': '0 25px 50px -12px rgba(15, 76, 92, 0.15)',
+                        'glow': '0 0 20px rgba(242, 122, 84, 0.3)'
+                    },
+                    borderRadius: {
+                        '3xl': '1.5rem',
+                        '4xl': '2rem'
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
                     }
                 }
             }
         }
     </script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden; /* 🔒 evita scroll lateral en móvil */
         }
 
-        img {
-            max-width: 100%;
-            height: auto;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
         }
 
-        .pulse-orange {
-            animation: pulse 2s infinite;
+        ::-webkit-scrollbar-track {
+            background: #F8FAFC;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(242, 122, 84, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(242, 122, 84, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(242, 122, 84, 0); }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 5px;
         }
 
-        /* Safe area para iOS (notch) */
-        header, nav {
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Chat Message Animation */
+        .chat-bubble {
+            opacity: 0;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 1s;
+        }
+
+        .delay-2 {
+            animation-delay: 2.5s;
+        }
+
+        .delay-3 {
+            animation-delay: 4s;
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Hide scrollbar for chat area but allow scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
 
-<body class="bg-hospedai-light text-slate-800">
+<body class="bg-hospedai-light text-slate-800 antialiased overflow-x-hidden pt-[30px]">
 
-    <div id="top-banner" class="bg-gradient-to-r from-hospedai-accent to-orange-500 text-white text-center py-2 px-4 text-sm font-bold fixed w-full z-[60] top-0 shadow-md flex justify-center items-center gap-3">
-        <span class="animate-pulse">⚡</span>
-        <span>OFERTA LANZAMIENTO: Setup GRATIS (solo hasta el 28/02)</span>
-        <span class="hidden sm:inline bg-white/30 px-2 py-0.5 rounded text-[10px] tracking-widest uppercase">Cupos Limitados</span>
-    </div>
+    <!-- HEADER WRAPPER (Fixed) -->
+    <div class="fixed top-0 left-0 w-full z-50 bg-white flex flex-col">
+        <!-- URGENCY BANNER -->
+        <div
+            class="bg-gradient-to-r from-red-500 to-hospedai-accent text-white font-bold py-2.5 md:py-3 text-center flex items-center justify-center px-4 relative z-20">
+            <div class="flex flex-nowrap items-center justify-center gap-2">
+                <span
+                    class="animate-pulse bg-white text-red-500 px-1.5 py-0.5 rounded text-[10px] md:text-xs uppercase tracking-wider flex-shrink-0 shadow-sm">Oferta</span>
 
-    <nav id="main-nav" class="bg-white/90 backdrop-blur-md py-4 shadow-sm fixed w-full z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <a href="#" class="flex items-center">
-                <img src="logo-hospedai.png" alt="HospedAI Logo" class="h-10 md:h-12 w-auto transition-transform hover:scale-105">
-            </a>
-            
-            <div class="hidden md:flex items-center space-x-8 font-medium text-hospedai-dark">
-                <a href="#beneficios" class="hover:text-hospedai-accent transition">Beneficios</a>
-                <a href="#como-funciona" class="hover:text-hospedai-accent transition">Cómo Funciona</a>
-                <a href="#precios" class="hover:text-hospedai-accent transition">Planes</a>
-                <a href="https://calendly.com/nicomauch1/30min" target="_blank" class="bg-hospedai-accent text-white px-5 py-2 rounded-full hover:bg-orange-600 transition shadow-md shadow-orange-200 font-bold">Agendar Demo</a>
+                <!-- Mobile Text (Shortened) -->
+                <span class="text-[10px] sm:text-[11px] md:hidden block whitespace-nowrap">
+                    🎁 Instalación 100% BONIFICADA (Cupos Limitados) ⏳
+                </span>
+
+                <!-- Desktop Text (Full) -->
+                <span class="hidden md:block text-sm whitespace-nowrap">
+                    Instalación 100% Bonificada (Solo para los próximos 5 hoteles) ⏳ | ⚡ Operativo en 72hs
+                </span>
             </div>
         </div>
-    </nav>
 
-    <header class="pt-40 pb-20 md:pt-48 md:pb-32 bg-hospedai-dark text-white overflow-hidden relative border-b border-hospedai-accent/20">
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center text-center md:text-left">
-            <div class="relative z-10">
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-                    Tu Hotel en <span class="text-hospedai-accent">WhatsApp, Instagram y Web</span>.
+        <!-- NAVBAR -->
+        <nav
+            class="w-full transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-100/50 relative z-10">
+            <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex justify-between items-center relative">
+                <a href="#" class="flex items-center gap-2 group flex-shrink-0">
+                    <img src="logo-hospedai.png" alt="HospedAI"
+                        class="h-8 md:h-10 w-auto transition-transform group-hover:scale-105">
+                </a>
+
+                <div class="hidden md:flex items-center space-x-8 font-medium text-sm text-slate-600">
+                    <a href="#beneficios" class="hover:text-hospedai-dark transition">Beneficios</a>
+                    <a href="#testimonios" class="hover:text-hospedai-dark transition">Resultados</a>
+                    <a href="#precios" class="hover:text-hospedai-dark transition">Planes</a>
+                    <a href="https://calendly.com/nicomauch1/30min"
+                        class="bg-hospedai-dark text-white px-6 py-2.5 rounded-full hover:bg-slate-800 transition shadow-lg shadow-hospedai-dark/20 font-semibold transform hover:-translate-y-0.5">Agendar
+                        Demo</a>
+                </div>
+
+                <!-- Mobile Menu Button (Hamburger) -->
+                <button id="mobile-menu-btn" class="md:hidden text-hospedai-dark p-2 focus:outline-none">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Dropdown -->
+            <div id="mobile-menu"
+                class="hidden md:hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-slate-100 flex-col animate-slide-up origin-top">
+                <a href="#beneficios"
+                    class="block px-6 py-4 text-slate-600 font-medium hover:bg-slate-50 border-b border-slate-50">Beneficios</a>
+                <a href="#testimonios"
+                    class="block px-6 py-4 text-slate-600 font-medium hover:bg-slate-50 border-b border-slate-50">Resultados</a>
+                <a href="#precios"
+                    class="block px-6 py-4 text-slate-600 font-medium hover:bg-slate-50 border-b border-slate-50">Planes</a>
+                <div class="p-6">
+                    <a href="https://calendly.com/nicomauch1/30min"
+                        class="block w-full text-center bg-hospedai-dark text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition shadow-lg">Agendar
+                        Demo</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- HERO SECTION -->
+    <header class="pt-32 pb-16 md:pt-48 md:pb-32 relative overflow-hidden">
+        <!-- Background Elements -->
+        <div
+            class="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-50/50 rounded-full blur-3xl -z-10 translate-x-1/3 -translate-y-1/4">
+        </div>
+        <div
+            class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-orange-50/50 rounded-full blur-3xl -z-10 -translate-x-1/4 translate-y-1/4">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+
+            <!-- Hero Content -->
+            <div class="text-center lg:text-left animate-slide-up">
+                <div class="inline-block bg-white border border-slate-200 shadow-sm rounded-full px-4 py-1.5 mb-6">
+                    <span
+                        class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide mr-2">Nuevo</span>
+                    <span class="text-slate-500 text-xs font-medium">IA Generativa Multilingüe v2.0</span>
+                </div>
+
+                <h1
+                    class="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 leading-[1.15] mb-6 tracking-tight">
+                    Más Reservas Directas. <br class="hidden md:block" />
+                    <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-hospedai-dark to-hospedai-accent">Menos
+                        Estrés.</span>
                 </h1>
-                
-                <p class="text-lg text-slate-200 mb-8 leading-relaxed max-w-xl mx-auto md:mx-0">
-                    ¿Cansado de perder reservas por no contestar WhatsApp a tiempo? HospedAI responde 24/7, verifica disponibilidad y cierra ventas automáticamente por ti.
+
+                <p class="text-lg md:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light">
+                    Transforma curiosos en huéspedes. Nuestra IA atiende 24/7 en <strong
+                        class="text-hospedai-dark font-semibold">WhatsApp, Instagram y tu Sitio Web</strong>, gestiona
+                    reservas y te
+                    ahorra horas de trabajo manual.
                 </p>
 
-                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <a href="#precios" class="bg-hospedai-accent text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-orange-600 transition shadow-lg pulse-orange">Ver Planes (Setup $0)</a>
-                    <a href="https://calendly.com/nicomauch1/30min" target="_blank" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-hospedai-dark transition">Demo Gratis (45 min)</a>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#precios"
+                        class="bg-hospedai-accent text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-orange-600 transition shadow-xl shadow-orange-500/20 transform hover:-translate-y-1">
+                        Ver Planes (Setup $0)
+                    </a>
+                    <a href="https://calendly.com/nicomauch1/30min"
+                        class="bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-full font-bold text-lg hover:border-slate-400 hover:bg-slate-50 transition shadow-sm">
+                        Ver Demo en Vivo
+                    </a>
                 </div>
-                <p class="mt-4 text-sm text-slate-300 italic">✅ Sin costos ocultos. Setup GRATIS para los primeros 10 hoteles.</p>
+                <!-- 72h Speed Trigger -->
+                <p class="mt-4 text-xs md:text-sm text-slate-500 font-medium text-center lg:text-left">
+                    ✅ Implementación técnica en menos de 72 horas.
+                </p>
+                <div class="mt-8 flex items-center justify-center lg:justify-start gap-4 text-sm text-slate-500">
+                    <div class="flex -space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-slate-200 border-2 border-white"></div>
+                        <div class="w-8 h-8 rounded-full bg-slate-300 border-2 border-white"></div>
+                        <div class="w-8 h-8 rounded-full bg-slate-400 border-2 border-white"></div>
+                    </div>
+                    <p>+50 Hoteles ya confían</p>
+                </div>
             </div>
-            <div class="hidden md:block relative">
-               <img src="https://placehold.co/600x500/0F4C5C/FFFFFF?text=Dashboard+Omnicanal" alt="HospedAI Dashboard" class="rounded-3xl shadow-2xl relative z-10 border-4 border-hospedai-accent/20">
-               <div class="absolute -bottom-6 -left-6 bg-white text-hospedai-dark p-4 rounded-2xl shadow-2xl border border-hospedai-accent z-20">
-                   <p class="text-xs font-bold uppercase tracking-tighter text-hospedai-accent">Impacto Real</p>
-                   <p class="text-lg font-black text-slate-800">+35% Reservas Directas</p>
-               </div>
+
+            <!-- Hero Specular (Phone Mockup) -->
+            <div class="relative lg:h-[700px] flex items-center justify-center animate-float hidden md:flex">
+                <!-- Phone Frame -->
+                <div
+                    class="w-[320px] h-[650px] bg-slate-900 rounded-[3rem] shadow-deep-2xl border-[8px] border-slate-800 relative overflow-hidden z-10 box-border">
+                    <!-- Notch fixed: slightly taller and negative margin to remove gap -->
+                    <div
+                        class="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-7 bg-slate-800 rounded-b-2xl z-40 -mt-[1px]">
+                    </div>
+
+                    <!-- Screen -->
+                    <div class="w-full h-full bg-[#E5DDD5] relative flex flex-col rounded-[2.5rem]">
+                        <!-- Header Chat (High Z-Index) -->
+                        <div class="bg-[#075E54] text-white p-4 pt-8 flex items-center gap-3 relative z-30 shadow-md">
+                            <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-xs">🤖
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm">HospedAI Assistant</h3>
+                                <p class="text-[10px] text-white/80">En línea</p>
+                            </div>
+                        </div>
+
+                        <!-- Chat Area (Scrollable underneath header) -->
+                        <div class="p-4 space-y-4 flex-1 overflow-y-auto no-scrollbar relative z-0 pb-20">
+                            <!-- User msg 1 -->
+                            <div class="flex justify-end chat-bubble delay-1">
+                                <div
+                                    class="bg-[#DCF8C6] text-xs p-3 rounded-lg rounded-tr-none shadow-sm max-w-[80%] text-slate-800">
+                                    Hola, ¿tienen disponibilidad para este fin de semana? Somos 2 personas.
+                                    <span class="block text-[9px] text-slate-400 text-right mt-1">10:42 AM</span>
+                                </div>
+                            </div>
+
+                            <!-- Bot msg 1 (Spanish) -->
+                            <div class="flex justify-start chat-bubble delay-2">
+                                <div
+                                    class="bg-white text-xs p-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%] text-slate-800">
+                                    ¡Hola! 👋 Sí, para este fin de semana tengo disponible nuestra <strong>Suite con
+                                        Vista al Mar</strong> 🌊.
+                                    <br><br>
+                                    El precio es de <strong>$120/noche</strong> con desayuno incluido. ¿Te gustaría
+                                    reservar ahora?
+                                    <span class="block text-[9px] text-slate-400 text-right mt-1">10:42 AM</span>
+                                </div>
+                            </div>
+
+                            <!-- User msg 2 (English) -->
+                            <div class="flex justify-end chat-bubble delay-3">
+                                <div
+                                    class="bg-[#DCF8C6] text-xs p-3 rounded-lg rounded-tr-none shadow-sm max-w-[80%] text-slate-800">
+                                    Do you speak English? Also, looks great!
+                                    <span class="block text-[9px] text-slate-400 text-right mt-1">10:43 AM</span>
+                                </div>
+                            </div>
+
+                            <!-- Bot msg 2 (English) -->
+                            <div class="flex justify-start chat-bubble" style="animation-delay: 5.5s;">
+                                <div
+                                    class="bg-white text-xs p-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%] text-slate-800">
+                                    Yes, of course! 🇺🇸 Since you liked the Suite, I can hold it for you right now.
+                                    <br><br>
+                                    Tap below to secure your booking 👇
+                                    <span class="block text-[9px] text-slate-400 text-right mt-1">10:43 AM</span>
+                                </div>
+                            </div>
+
+                            <!-- Padding bottom to ensure last message is visible above input -->
+                            <div class="h-10"></div>
+                        </div>
+
+                        <!-- Input Fake (Sticky Bottom) -->
+                        <div
+                            class="bg-white p-3 flex items-center gap-2 absolute bottom-0 w-full z-30 border-t border-slate-100">
+                            <div class="w-6 h-6 rounded-full bg-slate-200"></div>
+                            <div class="flex-1 h-8 bg-slate-100 rounded-full"></div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-[#075E54] flex items-center justify-center text-white text-xs">
+                                ➤</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Decor Elements -->
+                <div class="absolute top-20 -right-10 bg-white p-4 rounded-2xl shadow-xl z-20 animate-bounce"
+                    style="animation-duration: 3s;">
+                    <span class="text-2xl">🌍</span>
+                    <span class="font-bold text-slate-700 text-sm block">Multi-idioma</span>
+                </div>
+                <div class="absolute bottom-40 -left-10 bg-white p-4 rounded-2xl shadow-xl z-20 animate-bounce"
+                    style="animation-duration: 4s;">
+                    <span class="text-2xl">💰</span>
+                    <span class="font-bold text-slate-700 text-sm block">Venta Automática</span>
+                </div>
             </div>
         </div>
     </header>
 
-    <section id="beneficios" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-6 text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-hospedai-dark mb-4">¿Por qué elegir HospedAI?</h2>
-            <p class="text-xl text-slate-600 max-w-3xl mx-auto">Tecnología diseñada para hoteles que quieren vender más y trabajar menos.</p>
-        </div>
-        
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12 text-center md:text-left">
-            <div class="bg-hospedai-light p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition">
-                <div class="w-16 h-16 bg-hospedai-accent/10 rounded-2xl flex items-center justify-center mb-6 mx-auto md:mx-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-hospedai-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                </div>
-                <h3 class="text-2xl font-bold text-hospedai-dark mb-4">Atención 24/7</h3>
-                <p class="text-slate-600 leading-relaxed text-sm">Responde consultas de disponibilidad y precios al instante, sin importar la hora.</p>
-            </div>
-            <div class="bg-hospedai-light p-8 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden hover:shadow-md transition">
-                <div class="absolute top-0 right-0 bg-hospedai-accent text-white text-xs font-bold px-3 py-1 rounded-bl-lg">MÁS RENTABLE</div>
-                <div class="w-16 h-16 bg-hospedai-accent/10 rounded-2xl flex items-center justify-center mb-6 mx-auto md:mx-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-hospedai-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                </div>
-                <h3 class="text-2xl font-bold text-hospedai-dark mb-4">Chau Comisiones</h3>
-                <p class="text-slate-600 leading-relaxed text-sm">Fomentamos el canal directo para que ahorres el 20% que hoy se llevan las OTAs.</p>
-            </div>
-            <div class="bg-hospedai-light p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition">
-                <div class="w-16 h-16 bg-hospedai-accent/10 rounded-2xl flex items-center justify-center mb-6 mx-auto md:mx-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-hospedai-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                </div>
-                <h3 class="text-2xl font-bold text-hospedai-dark mb-4">Sincronización iCal</h3>
-                <p class="text-slate-600 leading-relaxed text-sm">Evita el overbooking conectando automáticamente calendarios de Airbnb y Booking.</p>
+    <!-- SOCIAL PROOF LOGOS -->
+    <section class="py-12 border-y border-slate-100 bg-white">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-sm font-semibold text-slate-400 uppercase tracking-widest mb-8">Confían en HospedAI</p>
+            <div
+                class="flex flex-wrap justify-center gap-8 md:gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                <!-- Simple CSS Placeholders for Logos -->
+                <div class="h-8 flex items-center font-serif text-xl font-bold text-slate-600">HotelRoma</div>
+                <div class="h-8 flex items-center font-sans text-xl font-black text-slate-600 tracking-tighter">
+                    CABANA<span class="text-hospedai-accent">X</span></div>
+                <div class="h-8 flex items-center font-mono text-lg font-bold text-slate-600">SunsetView</div>
+                <div class="h-8 flex items-center font-serif italic text-xl font-bold text-slate-600">TheLodge</div>
+                <div
+                    class="h-8 flex items-center font-sans text-xl font-bold text-slate-600 border-2 border-slate-600 px-2">
+                    URBAN</div>
             </div>
         </div>
     </section>
 
-    <section id="como-funciona" class="py-24 bg-slate-50 border-y border-slate-100">
+    <!-- TESTIMONIALS (Specific Users) -->
+    <section id="testimonios" class="py-24">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-hospedai-dark mb-4">Implementación en 72 Horas</h2>
-                <p class="text-xl text-slate-600">Nos encargamos de todo el proceso técnico por ti.</p>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-hospedai-dark mb-4">Resultados Reales</h2>
+                <p class="text-lg text-slate-500">Lo que dicen los anfitriones y gerentes que recuperaron su tiempo.</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-12 relative text-center">
-                <div class="relative z-10 bg-white p-6 rounded-2xl shadow-sm">
-                    <div class="w-20 h-20 bg-hospedai-dark text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-xl border-4 border-hospedai-accent">1</div>
-                    <h4 class="text-xl font-bold text-hospedai-dark mb-2">Mapeo de Datos</h4>
-                    <p class="text-slate-600 text-sm">Conectamos tus servicios, precios y calendarios con nuestro motor de IA.</p>
-                </div>
-                <div class="relative z-10 bg-white p-6 rounded-2xl shadow-sm">
-                    <div class="w-20 h-20 bg-hospedai-dark text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-xl border-4 border-hospedai-accent">2</div>
-                    <h4 class="text-xl font-bold text-hospedai-dark mb-2">Entrenamiento</h4>
-                    <p class="text-slate-600 text-sm">La IA aprende la identidad de tu hotel para responder con tu tono y estilo.</p>
-                </div>
-                <div class="relative z-10 bg-white p-6 rounded-2xl shadow-sm">
-                    <div class="w-20 h-20 bg-hospedai-dark text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-xl border-4 border-hospedai-accent">3</div>
-                    <h4 class="text-xl font-bold text-hospedai-dark mb-2">Activación</h4>
-                    <p class="text-slate-600 text-sm">Encendemos tus bots en WhatsApp y redes. Empiezas a capturar ventas 24/7.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="precios" class="py-24 bg-hospedai-light relative">
-        <div class="absolute top-0 left-0 w-full h-1/2 bg-hospedai-dark rounded-b-[50px] z-0"></div>
-
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="text-center mb-16 text-white">
-                <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Planes para cada propiedad</h2>
-                <p class="text-xl text-slate-200 max-w-2xl mx-auto">Escoge tu nivel de automatización. Aprovecha el setup gratis hoy.</p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                <div class="bg-white p-8 rounded-3xl shadow-xl border-t-4 border-slate-400 flex flex-col justify-between hover:scale-[1.02] transition duration-300">
-                    <div>
-                        <h3 class="text-2xl font-bold text-slate-600 mb-2 text-center">🥉 Essential</h3>
-                        <p class="text-sm text-slate-400 text-center mb-6">Ideal para 1 o 2 propiedades.</p>
-                        <div class="text-center mb-4">
-                            <span class="text-5xl font-extrabold text-hospedai-dark">$50</span><span class="text-slate-500 ml-1">/mes</span>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div
+                    class="bg-white p-8 rounded-3xl shadow-soft-xl hover:-translate-y-1 transition duration-300 border border-slate-100">
+                    <div class="flex text-yellow-500 mb-4">★★★★★</div>
+                    <p class="text-slate-700 leading-relaxed mb-6 italic">"Desde que instalé HospedAI, ya no tengo que
+                        responder preguntas sobre el Wi-Fi o el check-in a las 2 de la mañana. El bot lo hace todo y mis
+                        huéspedes están felices con la rapidez."</p>
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-500">
+                            MG</div>
+                        <div>
+                            <h4 class="font-bold text-hospedai-dark text-sm">Marcos G.</h4>
+                            <p class="text-xs text-slate-400">Anfitrión Superhost (Airbnb)</p>
                         </div>
-                        <div class="bg-green-50 text-green-700 text-[11px] font-bold py-1 px-3 rounded-full text-center mb-8 inline-block w-full border border-green-100">
-                            <span class="line-through text-slate-400 mr-2">Setup: $250</span> GRATIS HOY
-                        </div>
-                        <ul class="space-y-4 mb-8 text-slate-700 text-sm">
-                            <li class="flex items-start"><svg class="h-5 w-5 text-hospedai-accent mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Canal: Solo WhatsApp</li>
-                            <li class="flex items-start"><svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>IA de Atención 24/7</li>
-                            <li class="flex items-start"><svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Base de Conocimientos</li>
-                        </ul>
-                    </div>
-                    <a href="https://hospedai.lemonsqueezy.com/checkout/buy/cb903a36-047a-4510-bb7b-7b507139ead4" class="block w-full py-4 border-2 border-hospedai-dark text-hospedai-dark text-center rounded-xl font-bold hover:bg-hospedai-dark hover:text-white transition uppercase text-xs tracking-widest">Contratar Plan</a>
-                </div>
-
-                <div class="bg-white p-8 rounded-3xl shadow-2xl border-t-4 border-hospedai-accent relative transform md:scale-110 z-20 flex flex-col justify-between">
-                    <div class="absolute top-0 right-6 -translate-y-1/2 bg-hospedai-accent text-white px-4 py-1 rounded-full text-[10px] font-bold shadow-lg tracking-widest uppercase flex items-center gap-1 italic">
-                        ⭐ MÁS POPULAR
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-hospedai-dark mb-2 text-center">🥈 Pro</h3>
-                        <p class="text-sm text-slate-400 text-center mb-6">Hoteles Boutique y Cabañas.</p>
-                        <div class="text-center mb-4">
-                            <span class="text-5xl font-extrabold text-hospedai-dark">$99</span><span class="text-slate-500 ml-1">/mes</span>
-                        </div>
-                        
-                        <div class="bg-gradient-to-r from-orange-50 to-amber-50 text-hospedai-accent text-[11px] font-bold py-2 px-4 rounded-full text-center mb-8 border border-orange-200 shadow-sm">
-                            ⭐ <span class="font-black tracking-tight">AHORRO INMEDIATO: $499</span> EN SETUP
-                        </div>
-
-                        <ul class="space-y-4 mb-8 text-slate-700 text-sm">
-                            <li class="flex items-start font-bold"><svg class="h-5 w-5 text-hospedai-accent mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>WhatsApp + Instagram + FB</li>
-                            <li class="flex items-start"><svg class="h-5 w-5 text-hospedai-accent mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>CRM en Notion & Sincro iCal</li>
-                            <li class="flex items-start"><svg class="h-5 w-5 text-hospedai-accent mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Seguimiento Automático</li>
-                        </ul>
-                    </div>
-                    <div class="text-center">
-                        <a href="https://hospedai.lemonsqueezy.com/checkout/buy/0682e61d-655f-45fd-bba7-f4e2f5cd6210" class="block w-full py-4 bg-hospedai-accent text-white text-center rounded-xl font-bold hover:bg-orange-600 transition shadow-lg uppercase text-xs tracking-widest">Empezar Ahora</a>
-                        <p class="mt-3 text-[10px] text-slate-400 italic">¿Dudas? <a href="https://calendly.com/nicomauch1/30min" class="underline hover:text-hospedai-accent">Agenda una demo gratis</a></p>
                     </div>
                 </div>
 
-                <div class="bg-white p-8 rounded-3xl shadow-xl border-t-4 border-yellow-500 flex flex-col justify-between hover:scale-[1.02] transition duration-300">
-                    <div>
-                        <h3 class="text-2xl font-bold text-yellow-600 mb-2 text-center">🥇 Elite</h3>
-                        <p class="text-sm text-slate-400 text-center mb-6">Hoteles con PMS (Cloudbeds).</p>
-                        <div class="text-center mb-4">
-                            <span class="text-5xl font-extrabold text-hospedai-dark">$199</span><span class="text-slate-500 ml-1">/mes</span>
+                <!-- Testimonial 2 -->
+                <div
+                    class="bg-white p-8 rounded-3xl shadow-deep-2xl transform md:scale-105 border-t-4 border-hospedai-accent relative z-10">
+                    <div class="flex text-yellow-500 mb-4">★★★★★</div>
+                    <p class="text-slate-700 leading-relaxed mb-6 italic">"Lo que más nos sorprendió fue el seguimiento
+                        automático. Clientes que preguntaban y no volvían a escribir, ahora reservan gracias al mensaje
+                        recordatorio de las 24 horas. ¡Nuestras reservas directas subieron un 30%!"</p>
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center font-bold text-orange-600">
+                            SR</div>
+                        <div>
+                            <h4 class="font-bold text-hospedai-dark text-sm">Sofía R.</h4>
+                            <p class="text-xs text-slate-400">Gerente de Glamping</p>
                         </div>
-                        <div class="bg-yellow-50 text-yellow-700 text-[11px] font-bold py-1 px-3 rounded-full text-center mb-8 inline-block w-full border border-yellow-100 text-center">
-                            Setup Premium Bonificado (Val. $999)
-                        </div>
-                        <ul class="space-y-4 mb-8 text-slate-700 text-sm">
-                            <li class="flex items-start font-bold"><svg class="h-5 w-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Integración API PMS & Pagos</li>
-                            <li class="flex items-start"><svg class="h-5 w-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Check-in OCR (Lectura DNI)</li>
-                            <li class="flex items-start"><svg class="h-5 w-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Omnicanalidad Completa</li>
-                        </ul>
                     </div>
-                    <a href="https://calendly.com/nicomauch1/30min" target="_blank" class="block w-full py-4 border-2 border-hospedai-dark text-hospedai-dark text-center rounded-xl font-bold hover:bg-hospedai-dark hover:text-white transition uppercase text-xs tracking-widest text-xs">Consultoría Elite</a>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div
+                    class="bg-white p-8 rounded-3xl shadow-soft-xl hover:-translate-y-1 transition duration-300 border border-slate-100">
+                    <div class="flex text-yellow-500 mb-4">★★★★★</div>
+                    <p class="text-slate-700 leading-relaxed mb-6 italic">"La integración con Cloudbeds es impecable. El
+                        bot crea la reserva solo y el check-in con foto de DNI nos ahorra horas de papeleo en recepción.
+                        Es como tener un recepcionista estrella 24/7."</p>
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-500">
+                            RM</div>
+                        <div>
+                            <h4 class="font-bold text-hospedai-dark text-sm">Ricardo M.</h4>
+                            <p class="text-xs text-slate-400">Operaciones Hoteleras</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="contacto" class="py-24 bg-hospedai-dark text-white text-center border-t border-hospedai-accent/10">
-        <div class="max-w-4xl mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-extrabold mb-6">¿Tenés dudas antes de empezar?</h2>
-            <p class="text-xl text-slate-300 mb-10 leading-relaxed italic">"En HospedAI no solo instalamos bots, configuramos vendedores digitales para tu propiedad."</p>
-            
-            <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <a href="https://wa.me/5491173587209" target="_blank" class="flex items-center justify-center bg-white text-hospedai-dark px-10 py-4 rounded-full font-bold hover:bg-slate-100 transition shadow-lg">
-                    <svg class="w-6 h-6 mr-3 text-green-500" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.888 11.888-11.888 3.176 0 6.161 1.237 8.404 3.48s3.481 5.229 3.481 8.406c0 6.555-5.332 11.887-11.888 11.887-2.01 0-3.991-.51-5.757-1.478l-6.228 1.702zm6.312-3.677l.452.268c1.462.868 3.102 1.326 4.788 1.326 4.981 0 9.038-4.056 9.038-9.038 0-2.413-.94-4.681-2.647-6.388s-3.975-2.646-6.389-2.646c-4.981 0-9.038 4.057-9.038 9.038 0 1.751.51 3.456 1.474 4.938l.295.452-1.112 4.055 4.149-1.135z"/>
-                    </svg>
-                    WhatsApp Directo
-                </a>
-                <a href="mailto:hola@hospedaiapp.com" class="flex items-center justify-center border-2 border-white text-white px-10 py-4 rounded-full font-bold hover:bg-white hover:text-hospedai-dark transition">
-                    hola@hospedaiapp.com
-                </a>
+    <!-- KEY BENEFITS -->
+    <section id="beneficios" class="py-24 bg-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-20 text-center md:text-left">
+                <span
+                    class="text-hospedai-accent font-bold tracking-wider uppercase text-sm mb-2 block">Diferenciales</span>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-hospedai-dark mb-6">Tecnología de
+                    Punta,<br>Simplificada.</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-12">
+                <!-- Benefit 1 -->
+                <div class="group">
+                    <div
+                        class="w-14 h-14 bg-blue-50 text-hospedai-dark rounded-2xl flex items-center justify-center mb-6 text-2xl group-hover:bg-hospedai-dark group-hover:text-white transition-colors duration-300">
+                        🗣️
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Multi-idioma Inteligente</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        La IA detecta automáticamente el idioma del huésped y responde fluidamente en más de 50 idiomas.
+                        Rompe barreras y vende globalmente.
+                    </p>
+                </div>
+
+                <!-- Benefit 2 -->
+                <div class="group">
+                    <div
+                        class="w-14 h-14 bg-orange-50 text-hospedai-accent rounded-2xl flex items-center justify-center mb-6 text-2xl group-hover:bg-hospedai-accent group-hover:text-white transition-colors duration-300">
+                        🛠️
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Mantenimiento Incluido</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Olvídate de las actualizaciones técnicas. Nosotros nos encargamos de que tu bot siempre esté
+                        operativo y con la última información de tu hotel.
+                    </p>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="group">
+                    <div
+                        class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-6 text-2xl group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                        🖥️
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Soporte Omnicanal</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Centraliza todo en Chatwoot (PC/App). Si un humano necesita intervenir, puede hacerlo desde una
+                        única bandeja de entrada unificada.
+                    </p>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- PRICING SECTION -->
+    <section id="precios" class="py-24 bg-hospedai-light border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl font-extrabold text-hospedai-dark mb-4">Elige tu Plan</h2>
+                <p class="text-xl text-slate-500">Cancela cuando quieras. Sin contratos forzosos.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start">
+
+                <!-- Plan: Essential -->
+                <div
+                    class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100 flex flex-col relative overflow-hidden group hover:border-hospedai-dark/30 transition">
+                    <h3 class="text-2xl font-bold text-slate-700 mb-2">🥉 Essential</h3>
+                    <p class="text-sm text-slate-400 mb-6">Para dueños de Airbnb.</p>
+
+                    <div class="mb-6">
+                        <span class="text-4xl font-extrabold text-slate-900">$50</span>
+                        <span class="text-slate-500">/mes</span>
+                    </div>
+
+                    <!-- Anchoring -->
+                    <div class="bg-slate-50 rounded-xl p-3 mb-8 text-center border border-slate-100">
+                        <p class="text-xs text-slate-400 uppercase font-bold text-left mb-1 ml-1">Setup Fee</p>
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="line-through text-slate-400 decoration-red-500">$250 USD</span>
+                            <span class="text-green-600 font-extrabold text-sm bg-green-100 px-2 py-0.5 rounded">GRATIS
+                                HOY</span>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-4 mb-8 text-sm text-slate-600 flex-1">
+                        <li class="flex items-start gap-3"><span class="text-green-500 font-bold">✓</span> IA Atención
+                            24/7</li>
+                        <li class="flex items-start gap-3"><span class="text-green-500 font-bold">✓</span> Soporte
+                            Multi-idioma</li>
+                        <li class="flex items-start gap-3"><span class="text-green-500 font-bold">✓</span> Leads a
+                            Google Sheets</li>
+                        <li class="flex items-start gap-3"><span class="text-green-500 font-bold">✓</span> Mantenimiento
+                            incluido</li>
+                    </ul>
+
+                    <a href="https://whop.com/hospedai/plan-essential-hospedai/"
+                        class="w-full block text-center py-4 rounded-xl font-bold border-2 border-slate-200 text-slate-600 hover:border-hospedai-dark hover:text-hospedai-dark transition">Elegir
+                        Essential</a>
+                </div>
+
+                <!-- Plan: Pro (Focus) -->
+                <div
+                    class="bg-white rounded-[2rem] p-8 shadow-2xl border-2 border-hospedai-accent relative transform md:-translate-y-4">
+                    <!-- Recommended Badge -->
+                    <div
+                        class="absolute -top-5 left-1/2 -translate-x-1/2 bg-hospedai-accent text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg tracking-wide uppercase">
+                        Recomendado
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-hospedai-dark mb-2">🥈 Pro</h3>
+                    <p class="text-sm text-slate-400 mb-6 font-medium">Hoteles Boutique y Cabañas.</p>
+
+                    <div class="mb-6">
+                        <span class="text-5xl font-black text-slate-900">$99</span>
+                        <span class="text-slate-500">/mes</span>
+                    </div>
+
+                    <!-- Anchoring -->
+                    <div class="bg-orange-50 rounded-xl p-3 mb-8 text-center border border-orange-100">
+                        <p class="text-xs text-orange-400 uppercase font-bold text-left mb-1 ml-1">Setup Fee</p>
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="line-through text-slate-400 decoration-red-500 text-lg">$499 USD</span>
+                            <span
+                                class="text-hospedai-accent font-extrabold text-sm bg-white px-2 py-0.5 rounded shadow-sm border border-orange-100">100%
+                                OFF</span>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-4 mb-8 text-sm text-slate-700 font-medium">
+                        <li class="flex items-start gap-3"><span class="text-hospedai-accent font-bold">✓</span> Todo lo
+                            de Essential</li>
+                        <li class="flex items-start gap-3"><span class="text-hospedai-accent font-bold">✓</span>
+                            <strong>HospedAI CRM</strong> (Notion)
+                        </li>
+                        <li class="flex items-start gap-3"><span class="text-hospedai-accent font-bold">✓</span>
+                            Estrategia Multimedia</li>
+                        <li class="flex items-start gap-3 relative"><span
+                                class="text-hospedai-accent font-bold">✓</span> Seguimiento Automático <span
+                                class="absolute -right-2 top-0 flex h-2 w-2"><span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span
+                                    class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span></li>
+                        <li class="flex items-start gap-3"><span class="text-hospedai-accent font-bold">✓</span>
+                            Sincronización iCal</li>
+                    </ul>
+
+                    <a href="https://whop.com/hospedai/plan-pro-hospedai/"
+                        class="w-full block text-center py-4 rounded-xl font-bold bg-hospedai-accent text-white hover:bg-orange-600 transition shadow-lg shadow-orange-500/30 text-lg">
+                        Empezar Prueba
+                    </a>
+                </div>
+
+                <!-- Plan: Elite -->
+                <div
+                    class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100 flex flex-col hover:border-yellow-400 transition">
+                    <h3 class="text-2xl font-bold text-yellow-700 mb-2">🥇 Elite</h3>
+                    <p class="text-sm text-slate-400 mb-6">Complejos con PMS.</p>
+
+                    <div class="mb-6">
+                        <span class="text-4xl font-extrabold text-slate-900">$199</span>
+                        <span class="text-slate-500">/mes</span>
+                    </div>
+
+                    <!-- Anchoring -->
+                    <div class="bg-slate-50 rounded-xl p-3 mb-8 text-center border border-slate-100">
+                        <p class="text-xs text-slate-400 uppercase font-bold text-left mb-1 ml-1">Setup Fee</p>
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="line-through text-slate-400 decoration-red-500">$999 USD</span>
+                            <span class="text-green-600 font-extrabold text-sm bg-green-100 px-2 py-0.5 rounded">GRATIS
+                                HOY</span>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-4 mb-8 text-sm text-slate-600 flex-1">
+                        <li class="flex items-start gap-3"><span class="text-yellow-500 font-bold">✓</span> Todo lo de
+                            Pro</li>
+                        <li class="flex items-start gap-3"><span class="text-yellow-500 font-bold">✓</span>
+                            <strong>Integración Cloudbeds</strong>
+                        </li>
+                        <li class="flex items-start gap-3"><span class="text-yellow-500 font-bold">✓</span> Check-in
+                            Express (OCR)</li>
+                        <li class="flex items-start gap-3"><span class="text-yellow-500 font-bold">✓</span> Pasarela de
+                            Pagos</li>
+                    </ul>
+
+                    <a href="https://calendly.com/nicomauch1/30min" target="_blank"
+                        class="w-full block text-center py-4 rounded-xl font-bold border-2 border-slate-200 text-slate-600 hover:border-yellow-500 hover:text-yellow-600 transition">Agendar
+                        Consultoría</a>
+                </div>
+
+            </div>
+
+            <p class="text-center text-slate-400 text-sm mt-12 mb-4">
+                🔒 Pagos procesados seguramente. Garantía de satisfacción de 30 días.
+            </p>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION (New) -->
     <section class="py-24 bg-white border-t border-slate-100">
-        <div class="max-w-4xl mx-auto px-6">
+        <div class="max-w-3xl mx-auto px-6">
             <h2 class="text-3xl font-extrabold text-hospedai-dark text-center mb-12">Preguntas Frecuentes</h2>
-            <div class="grid md:grid-cols-2 gap-8 text-left">
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                    <h4 class="text-lg font-bold text-hospedai-dark mb-2">¿Cómo funciona el proceso de Setup?</h4>
-                    <p class="text-slate-600 text-sm">Nuestro equipo configura los flujos automáticos y entrena a la IA con los datos de tu propiedad para que esté operativa en menos de 72 horas.</p>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                    <h4 class="text-lg font-bold text-hospedai-dark mb-2">¿En qué canales atiende HospedAI?</h4>
-                    <p class="text-slate-600 text-sm">WhatsApp, Instagram DM, Facebook Messenger y chat en tu sitio web oficial.</p>
-                </div>
-                
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 border-l-4 border-l-hospedai-accent">
-                    <h4 class="text-lg font-bold text-hospedai-dark mb-2">¿Cuánto tiempo tengo para decidirme?</h4>
-                    <p class="text-slate-600 text-sm">La oferta de setup gratis aplica solo para los <span class="font-bold text-hospedai-accent underline">primeros 10 hoteles</span> que se registren antes del 28 de febrero. No es solo fecha límite, es cupo limitado.</p>
-                </div>
 
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                    <h4 class="text-lg font-bold text-hospedai-dark mb-2">¿Qué pasa si la IA no sabe responder?</h4>
-                    <p class="text-slate-600 text-sm">La IA te notificará inmediatamente para que un humano pueda intervenir de forma manual si es necesario.</p>
-                </div>
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <details
+                    class="group bg-slate-50 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden border border-slate-100 shadow-sm cursor-pointer">
+                    <summary
+                        class="flex items-center justify-between gap-1.5 text-hospedai-dark font-bold marker:content-none">
+                        <h3 class="text-lg">¿Qué pasa si la IA no sabe responder algo?</h3>
+                        <svg class="h-5 w-5 shrink-0 transition duration-300 group-open:-rotate-180 text-hospedai-accent"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+                    <p class="mt-4 leading-relaxed text-slate-600 text-sm">
+                        La IA te notificará de inmediato y podrás intervenir manualmente desde tu panel de Chatwoot
+                        (disponible en PC y App móvil). El control siempre es tuyo.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 2 -->
+                <details
+                    class="group bg-slate-50 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden border border-slate-100 shadow-sm cursor-pointer">
+                    <summary
+                        class="flex items-center justify-between gap-1.5 text-hospedai-dark font-bold marker:content-none">
+                        <h3 class="text-lg">¿Es compatible con mi sistema de gestión (PMS)?</h3>
+                        <svg class="h-5 w-5 shrink-0 transition duration-300 group-open:-rotate-180 text-hospedai-accent"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+                    <p class="mt-4 leading-relaxed text-slate-600 text-sm">
+                        Sí. Ofrecemos sincronización universal mediante iCal (Google/Airbnb) en el plan Pro e
+                        integración avanzada por API (Cloudbeds) en el plan Elite.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 3 -->
+                <details
+                    class="group bg-slate-50 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden border border-slate-100 shadow-sm cursor-pointer">
+                    <summary
+                        class="flex items-center justify-between gap-1.5 text-hospedai-dark font-bold marker:content-none">
+                        <h3 class="text-lg">¿Cómo funciona la oferta de Instalación Gratis?</h3>
+                        <svg class="h-5 w-5 shrink-0 transition duration-300 group-open:-rotate-180 text-hospedai-accent"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+                    <p class="mt-4 leading-relaxed text-slate-600 text-sm">
+                        Por lanzamiento, bonificamos el 100% del costo de configuración técnica (Setup) a los primeros 5
+                        hoteles. Solo pagas tu suscripción mensual.
+                    </p>
+                </details>
             </div>
         </div>
     </section>
 
-    <footer class="bg-slate-900 py-16 text-slate-400 text-sm">
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12 items-center text-center md:text-left">
+    <!-- FOOTER -->
+    <footer class="bg-hospedai-dark text-slate-300 py-16 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12">
+            <div class="col-span-1 md:col-span-1">
+                <img src="logo-hospedai.png" alt="HospedAI Logo" class="h-8 w-auto brightness-0 invert opacity-70 mb-6">
+                <p class="text-sm leading-relaxed text-slate-400">
+                    Ayudamos a hoteles y anfitriones a automatizar sus operaciones y aumentar ingresos con Inteligencia
+                    Artificial.
+                </p>
+            </div>
+
             <div>
-                <img src="logo-hospedai.png" alt="HospedAI" class="h-10 w-auto brightness-0 invert mx-auto md:mx-0 mb-4 opacity-50">
-                <p class="max-w-xs mx-auto md:mx-0 leading-relaxed text-slate-500">Inteligencia Artificial aplicada para maximizar las ventas de tu hotel.</p>
+                <h4 class="text-white font-bold mb-6">Producto</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#beneficios" class="hover:text-hospedai-accent transition">Beneficios</a></li>
+                    <li><a href="#precios" class="hover:text-hospedai-accent transition">Precios</a></li>
+                    <li><a href="#testimonios" class="hover:text-hospedai-accent transition">Casos de Éxito</a></li>
+                </ul>
             </div>
-            <div class="flex flex-col space-y-3 font-bold text-slate-300 uppercase tracking-widest text-[10px]">
-                <a href="privacidad.html" class="hover:text-hospedai-accent transition text-slate-500">Política de Privacidad</a>
-                <a href="terminos.html" class="hover:text-hospedai-accent transition text-slate-500">Términos de Servicio</a>
-                <a href="reembolsos.html" class="hover:text-hospedai-accent transition text-slate-500">Política de Reembolsos</a>
-            </div>
+
             <div>
-                <p class="mb-2 text-slate-500 font-medium italic">Hecho con ❤️ para la hotelería.</p>
-                <p class="text-slate-300 font-bold">© 2025 HospedAI. Operado por Nico Mauch.</p>
-                <p class="text-slate-500 text-[10px] mt-1 italic">Setup GRATIS por tiempo limitado.</p>
+                <h4 class="text-white font-bold mb-6">Legal</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="privacidad.html" class="hover:text-hospedai-accent transition">Privacidad</a></li>
+                    <li><a href="terminos.html" class="hover:text-hospedai-accent transition">Términos</a></li>
+                    <li><a href="reembolsos.html" class="hover:text-hospedai-accent transition">Reembolsos</a></li>
+                </ul>
             </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-6">Contacto</h4>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-hospedai-accent" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.888 11.888-11.888 3.176 0 6.161 1.237 8.404 3.48s3.481 5.229 3.481 8.406c0 6.555-5.332 11.887-11.888 11.887-2.01 0-3.991-.51-5.757-1.478l-6.228 1.702zm6.312-3.677l.452.268c1.462.868 3.102 1.326 4.788 1.326 4.981 0 9.038-4.056 9.038-9.038 0-2.413-.94-4.681-2.647-6.388s-3.975-2.646-6.389-2.646c-4.981 0-9.038 4.057-9.038 9.038 0 1.751.51 3.456 1.474 4.938l.295.452-1.112 4.055 4.149-1.135z" />
+                        </svg>
+                        <a href="https://wa.me/5491173587209" class="hover:text-white transition">WhatsApp</a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-hospedai-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        <a href="mailto:hola@hospedaiapp.com"
+                            class="hover:text-white transition">hola@hospedaiapp.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
+            <p>&copy; 2026 HospedAI. Todos los derechos reservados.</p>
         </div>
     </footer>
 
+    <!-- Scripts for Mobile Menu -->
     <script>
-        window.addEventListener('scroll', function() {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
-                nav.classList.add('bg-white/90', 'backdrop-blur-md', 'shadow-md');
-                nav.classList.remove('bg-white', 'shadow-sm');
-            } else {
-                nav.classList.add('bg-white', 'shadow-sm');
-                nav.classList.remove('bg-white/90', 'backdrop-blur-md', 'shadow-md');
-            }
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close menu when clicking a link
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
         });
     </script>
-    <script>
-    function adjustNavPosition() {
-        const banner = document.getElementById('top-banner');
-        const nav = document.getElementById('main-nav');
-
-        if (banner && nav) {
-        const bannerHeight = banner.offsetHeight;
-        nav.style.top = bannerHeight + 'px';
-        }
-    }
-
-    window.addEventListener('load', adjustNavPosition);
-    window.addEventListener('resize', adjustNavPosition);
-    </script>
-
 </body>
+
 </html>
